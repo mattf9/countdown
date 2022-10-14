@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import curses
+import argparse
 import time
-
-COUNTDOWN_MINUTES = 2
 
 
 def countdown(minutes):
@@ -26,4 +25,10 @@ def countdown(minutes):
 
 
 if __name__ == '__main__':
-    countdown(COUNTDOWN_MINUTES)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--minutes", type=int, default=2, help = "set time to count down from")
+    args = parser.parse_args()
+ 
+    if args.minutes:
+       print(args.minutes)
+    countdown(args.minutes)
