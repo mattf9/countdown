@@ -6,7 +6,7 @@ import sys
 import time
 
 
-def countdown(minutes):
+def countdown(minutes,description):
     paused = False
     seconds = 59
     minutes -= 1
@@ -17,7 +17,7 @@ def countdown(minutes):
     curses.cbreak()
     while (minutes >= 0) and (seconds >= 0):
         stdscr.addstr(
-            0, 0, "Time Remaining: {:02d}:{:02d}".format(minutes, seconds))
+            0, 0, "Time Remaining: {:02d}:{:02d}  {}".format(minutes, seconds, description))
         stdscr.refresh()
         time.sleep(1)
         if not paused:
@@ -51,6 +51,7 @@ def end_curses():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--minutes", type=int, default=2, help = "set time to count down from")
+    parser.add_argument("-d", "--description", default="", help = "description of task")
     args = parser.parse_args()
  
-    countdown(args.minutes)
+    countdown(args.minutes, args.description)
