@@ -2,11 +2,14 @@
 
 import argparse
 import curses
+import datetime
+import sqlite3
 import sys
 import time
 
 
-def countdown(minutes,description):
+def countdown(minutes, description):
+    original_minutes = minutes
     paused = False
     seconds = 59
     minutes -= 1
@@ -39,7 +42,27 @@ def countdown(minutes,description):
                 stdscr.refresh()
     end_curses()
     print('\nTask complete\n')
+    save_task(original_minutes, description)
 
+
+def save_task(minutes, description):
+    sqliteConnection = sqlite3.connect('tasks.db')
+    c = sqliteConnection.cursor()
+    current_time = str(datetime.datetime.now())
+    c.execute('''
+             
+                CREATE TABLE if not exists task_history(
+                task_endtime TEXT,
+                task_minutes INTEGER, 
+                task_description TEXT
+            )''')
+    sql = ''' INSERT INTO task_history(task_endtime, task_minutes, task_description)
+              VALUES(?,?,?) '''
+    c.execute(sql, (current_time, minutes, description))
+    sqliteConnection.commit()
+    c.close()
+    sqliteConnection.close()
+    # pass
 
 def end_curses():
     curses.curs_set(True)
@@ -49,9 +72,10 @@ def end_curses():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(epilog="'p' to pause, space or 'q' to quit")
     parser.add_argument("-m", "--minutes", type=int, default=2, help = "set time to count down from")
     parser.add_argument("-d", "--description", default="", help = "description of task")
     args = parser.parse_args()
  
     countdown(args.minutes, args.description)
+   
