@@ -35,10 +35,10 @@ def countdown(minutes, description):
         if c == ord(' ') or c == ord('p'):
             if paused:
                 paused = False
-                stdscr.addstr(0, 0, "Time Remaining: {:02d}:{:02d}               ".format(minutes, seconds))
+                stdscr.addstr(1, 0, "              ")
             else:
                 paused = True
-                stdscr.addstr(0, 0, "Time Remaining: {:02d}:{:02d} *** PAUSED ***".format(minutes, seconds),curses.A_REVERSE)
+                stdscr.addstr(1, 0, "*** PAUSED ***", curses.A_REVERSE)
                 stdscr.refresh()
     end_curses()
     print('\nTask complete\n')
